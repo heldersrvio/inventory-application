@@ -70,7 +70,7 @@ const headphoneCreate = (
 	is_wireless,
 	is_noise_canceling,
 	image,
-	cb
+	cb,
 ) => {
 	const headphoneDetail = {
 		name,
@@ -107,7 +107,7 @@ const findSomething = (cb) => {
 				console.log(x);
 			},
 		],
-		cb
+		cb,
 	);
 };
 
@@ -118,35 +118,35 @@ const createCategoriesAndBrands = (cb) => {
 				categoryCreate(
 					'Over-Ear',
 					'Earpads big enough to fit your entire year and have a headband that connects two earcups.',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
 				categoryCreate(
 					'On-Ear',
 					'Similar to Over-Ear headphones, but with smaller earpads that rest on your earlobes.',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
 				categoryCreate(
 					'Earbuds',
 					'Portable, small, with a variety of shapes and sizes.',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
 				categoryCreate(
 					'Earphones',
 					'Small like the earbuds, but sit in front of the ear canal and rest on your earlobes.',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
 				categoryCreate(
 					'Bone Conduction',
 					'Use bone conducting technology to transmit sound through your cheekbones.',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -171,7 +171,7 @@ const createCategoriesAndBrands = (cb) => {
 				brandCreate('Apple', 'https://i.imgur.com/nbNUBdj.jpg', callback);
 			},
 		],
-		cb
+		cb,
 	);
 };
 
@@ -189,7 +189,7 @@ const createHeadphones = (cb) => {
 					false,
 					false,
 					'https://i.imgur.com/yWEVXI2.jpg',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -203,7 +203,7 @@ const createHeadphones = (cb) => {
 					true,
 					false,
 					'https://i.imgur.com/zrUJW82.png',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -217,7 +217,7 @@ const createHeadphones = (cb) => {
 					true,
 					true,
 					'https://i.imgur.com/Ul7PWGU.png',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -231,7 +231,7 @@ const createHeadphones = (cb) => {
 					true,
 					true,
 					'https://i.imgur.com/jiRNTum.jpg',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -245,7 +245,7 @@ const createHeadphones = (cb) => {
 					true,
 					true,
 					'https://i.imgur.com/ubCFBzQ.jpg',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -259,7 +259,7 @@ const createHeadphones = (cb) => {
 					false,
 					false,
 					'https://i.imgur.com/RGhY073.png',
-					callback
+					callback,
 				);
 			},
 			(callback) => {
@@ -273,11 +273,11 @@ const createHeadphones = (cb) => {
 					true,
 					true,
 					'https://i.imgur.com/M3YIHPR.jpg',
-					callback
+					callback,
 				);
 			},
 		],
-		cb
+		cb,
 	);
 };
 
@@ -290,5 +290,5 @@ async.series(
 			console.log('Headphones: ' + headphones);
 		}
 		mongoose.connection.close();
-	}
+	},
 );
