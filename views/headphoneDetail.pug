@@ -1,0 +1,24 @@
+extends layout
+
+block content
+  h1 #{headphone.name}
+
+  p #[strong Category:]
+    a(href=headphone.category.url) #{headphone.category.name}
+  p #[strong Description:] #{headphone.description}
+  p #[strong Brand:]
+    a(href=headphone.brand.url) #{headphone.brand.name}
+  p #[strong Price:] #{headphone.price}
+  p #[strong Number in stock:] #{headphone.number_in_stock}
+  if headphone.is_wireless === true
+    p #[strong Wireless]
+  else 
+    p #[strong Wired]
+  if headphone.is_noise_canceling === true
+    p #[strong Noise canceling]
+  
+  hr
+  p
+    a(href=headphone.url+'/delete') Delete headphone
+  p
+    a(href=headphone.url+'/update') Update headphone

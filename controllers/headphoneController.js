@@ -65,6 +65,19 @@ const headphoneController = (() => {
 	};
 
 	const headphoneCreatePost = [
+		(req, _res, next) => {
+			if (req.body.is_wireless === undefined) {
+				req.body.is_wireless = false;
+			} else {
+				req.body.is_wireless = true;
+			}
+			if (req.body.is_noise_canceling === undefined) {
+				req.body.is_noise_canceling = false;
+			} else {
+				req.body.is_noise_canceling = true;
+			}
+			next();
+		},
 		body('name', 'Headphone name required.')
 			.trim()
 			.isLength({ min: 1 })
@@ -79,11 +92,6 @@ const headphoneController = (() => {
 			.trim()
 			.isLength({ min: 1 })
 			.escape(),
-		body('is_wireless', 'Wireless specification required.').isBoolean(),
-		body(
-			'is_noise_canceling',
-			'Noise canceling specification required.',
-		).isBoolean(),
 
 		(req, res, next) => {
 			const errors = validationResult(req);
@@ -188,6 +196,19 @@ const headphoneController = (() => {
 	};
 
 	const headphoneUpdatePost = [
+		(req, _res, next) => {
+			if (req.body.is_wireless === undefined) {
+				req.body.is_wireless = false;
+			} else {
+				req.body.is_wireless = true;
+			}
+			if (req.body.is_noise_canceling === undefined) {
+				req.body.is_noise_canceling = false;
+			} else {
+				req.body.is_noise_canceling = true;
+			}
+			next();
+		},
 		body('name', 'Headphone name required.')
 			.trim()
 			.isLength({ min: 1 })
@@ -202,11 +223,6 @@ const headphoneController = (() => {
 			.trim()
 			.isLength({ min: 1 })
 			.escape(),
-		body('is_wireless', 'Wireless specification required.').isBoolean(),
-		body(
-			'is_noise_canceling',
-			'Noise canceling specification required.',
-		).isBoolean(),
 
 		(req, res, next) => {
 			const errors = validationResult(req);

@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 #{title}: #{headphone.name}
+
+  p Do you really want to delete this headphone?
+
+  form(method='POST' action='')
+      div.form-group
+      input#headphone-id.form-control(type='hidden',name='headphone-id', required='true', value=headphone._id )
+
+      button.btn.btn-primary(type='submit') Delete

@@ -1,0 +1,60 @@
+extends layout
+
+block content
+  h1= title
+
+  form(method='POST' action='')
+    div.form-group
+      label(for='title') Name:
+      input#name.form-control(type='text' placeholder='Name of headphone' name='name' required='true' value=(undefined===headphone ? '' : headphone.name) )
+    div.form-group
+      label(for='description') Description:
+      textarea#description.form-control(type='textarea' placeholder='Description' name='description' required='true') #{undefined===headphone ? '' : headphone.description}
+    div.form-group
+      label(for='category') Category:
+      select#category.form-control(type='select' placeholder='Select category' name='category' required='true' )
+        - categories.sort((a, b) => { return a.name < b.name ? -1 : 1; });
+        for category in categories
+          if headphone
+            option(
+              value=category._id
+              selected=(
+                category._id.toString()==headphone.category._id
+                || category._id.toString()==headphone.category
+              ) ? 'selected' : false
+            ) #{category.name}
+          else
+            option(value=category._id) #{category.name}
+    div.form-group
+      label(for='brand') Brand:
+      select#brand.form-control(type='select' placeholder='Select brand' name='brand' required='true' )
+        - brands.sort((a, b) => { return a.name < b.name ? -1 : 1; });
+        for brand in brands
+          if headphone
+            option(
+              value=brand._id
+              selected=(
+                brand._id.toString()==headphone.brand._id
+                || brand._id.toString()==headphone.brand
+              ) ? 'selected' : false
+            ) #{brand.name}
+          else
+            option(value=brand._id) #{brand.name}
+    div.form-group
+      label(for='price') Price: 
+      input#price.form-control(type='number' name='price' value=(undefined===headphone ? 0 : headphone.price) required='true')
+    div.form-group
+      label(for='number-in-stock') Number in stock: 
+      input#number-in-stock.form-control(type='number' name='number_in_stock' value=(undefined===headphone ? 0 : headphone.number_in_stock) required='true')
+    div.form-group
+      input#is-wireless(type='checkbox' name='is_wireless' value='wireless' checked=(undefined===headphone ? false : headphone.is_wireless))
+      label(for='is-wireless') Wireless
+      input#is-noise-canceling(type='checkbox' name='is_noise_canceling' value='wireless' checked=(undefined===headphone ? false : headphone.is_noise_canceling))
+      label(for='is-noise-canceling') Noise canceling
+    
+    button.btn.btn-primary(type='submit') Submit
+
+  if errors
+    ul
+      for error in errors
+        li!= error.msg
