@@ -51,7 +51,10 @@ const categoryController = (() => {
 	};
 
 	const categoryCreatePost = [
-		body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+		body('name', 'Category name required.')
+			.trim()
+			.isLength({ min: 1 })
+			.escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			const category = new Category({
@@ -171,7 +174,10 @@ const categoryController = (() => {
 	};
 
 	const categoryUpdatePost = [
-		body('name', 'Category name required').trim().isLength({ min: 1 }).escape(),
+		body('name', 'Category name required.')
+			.trim()
+			.isLength({ min: 1 })
+			.escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {

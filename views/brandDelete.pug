@@ -1,0 +1,22 @@
+extends layout 
+
+block content 
+  h1 #{title}: #{brand.name}
+
+  if brandHeadphones.length
+    p #[strong Delete the following headphones before attempting to delete this brand.]
+
+    div(style='margin-left:20px;margin-top:20px')
+      h4 Headphones 
+      dl 
+        each headphone in brandHeadphones
+          dt 
+            a(href=headphone.url) #{headphone.name}
+          dd #{headphone.description}
+  else 
+    p Do you really want to delete this brand?
+
+    form(method='POST' action='')
+      div.form-group
+        input#brand-id.form-control(type='hidden', name='genre-id', required='true', value=brand.id)
+      button.btn.btn-primary(type='submit') Delete 

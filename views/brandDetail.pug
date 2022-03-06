@@ -1,0 +1,23 @@
+extends layout
+
+block content
+
+  h1 Brand: #{brand.name}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Headphones
+
+    dl
+      each headphone in brandHeadphones
+        dt
+          a(href=headphone.url) #{headphone.name}
+        dd #{headphone.description}
+
+      else
+        p This brand has no headphones
+  hr
+  p 
+    a(href=brand.url+'/delete') Delete brand
+  p
+    a(href=brand.url+'/update') Update brand

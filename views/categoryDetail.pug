@@ -1,0 +1,25 @@
+extends layout
+
+block content
+
+  h1 Category: #{category.name}
+
+  p #{category.description}
+
+  div(style='margin-left:20px;margin-top:20px')
+
+    h4 Headphones
+
+    dl
+      each headphone in categoryHeadphones
+        dt
+          a(href=headphone.url) #{headphone.name}
+        dd #{headphone.description}
+
+      else
+        p This category has no headphones
+  hr
+  p 
+    a(href=category.url+'/delete') Delete category
+  p
+    a(href=category.url+'/update') Update category

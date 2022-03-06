@@ -51,7 +51,7 @@ const brandController = (() => {
 	};
 
 	const brandCreatePost = [
-		body('name', 'Brand name required').trim().isLength({ min: 1 }).escape(),
+		body('name', 'Brand name required.').trim().isLength({ min: 1 }).escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			const brand = new Brand({ name: req.body.name });
@@ -168,7 +168,7 @@ const brandController = (() => {
 	};
 
 	const brandUpdatePost = [
-		body('name', 'Brand name required').trim().isLength({ min: 1 }).escape(),
+		body('name', 'Brand name required.').trim().isLength({ min: 1 }).escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
