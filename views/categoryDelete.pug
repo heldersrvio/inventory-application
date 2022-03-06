@@ -12,11 +12,10 @@ block content
         each headphone in categoryHeadphones
           dt 
             a(href=headphone.url) #{headphone.name}
-          dd #{headphone.description}
   else 
     p Do you really want to delete this category?
 
     form(method='POST' action='')
       div.form-group
-        input#category-id.form-control(type='hidden', name='genre-id', required='true', value=category.id)
+        input#category-id.form-control(type='hidden', name='categoryId', required='true', value=category.id)
       button.btn.btn-primary(type='submit') Delete 

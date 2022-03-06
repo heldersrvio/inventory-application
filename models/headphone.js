@@ -14,7 +14,7 @@ const HeadphoneSchema = new Schema({
 	category: { type: Schema.Types.ObjectId, ref: 'Category', required: true },
 	price: { type: Number, required: true },
 	number_in_stock: { type: Number, required: true },
-	brand: { type: Schema.Types.ObjectId, required: true },
+	brand: { type: Schema.Types.ObjectId, ref: 'Brand', required: true },
 	is_wireless: { type: Boolean, required: true },
 	is_noise_canceling: { type: Boolean, required: true },
 	image: { type: String, get: retrieveImage },

@@ -42,7 +42,7 @@ block content
             option(value=brand._id) #{brand.name}
     div.form-group
       label(for='price') Price: 
-      input#price.form-control(type='number' name='price' value=(undefined===headphone ? 0 : headphone.price) required='true')
+      input#price.form-control(type='number' step='.01' name='price' value=(undefined===headphone ? 0 : headphone.price) required='true')
     div.form-group
       label(for='number-in-stock') Number in stock: 
       input#number-in-stock.form-control(type='number' name='number_in_stock' value=(undefined===headphone ? 0 : headphone.number_in_stock) required='true')

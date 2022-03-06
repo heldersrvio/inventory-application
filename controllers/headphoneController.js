@@ -26,6 +26,7 @@ const headphoneController = (() => {
 			.populate('brand')
 			.populate('category')
 			.exec((err, headphone) => {
+				console.log(headphone);
 				if (err !== null) {
 					return next(err);
 				}
@@ -140,7 +141,7 @@ const headphoneController = (() => {
 	];
 
 	const headphoneDeleteGet = (req, res, next) => {
-		Headphone.find({ headphone: req.params.id }).exec((err, headphone) => {
+		Headphone.findById(req.params.id).exec((err, headphone) => {
 			if (err !== null) {
 				return next(err);
 			}
@@ -167,7 +168,10 @@ const headphoneController = (() => {
 		async.parallel(
 			{
 				headphone: (callback) => {
-					Headphone.findById(req.params.id).exec(callback);
+					Headphone.findById(req.params.id)
+						.populate('brand')
+						.populate('category')
+						.exec(callback);
 				},
 				categories: (callback) => {
 					Category.find(callback);
@@ -261,7 +265,7 @@ const headphoneController = (() => {
 					},
 				);
 			} else {
-				headphone.findByIdAndUpdate(
+				Headphone.findByIdAndUpdate(
 					req.params.id,
 					headphone,
 					{},

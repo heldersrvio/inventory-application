@@ -12,11 +12,10 @@ block content
         each headphone in brandHeadphones
           dt 
             a(href=headphone.url) #{headphone.name}
-          dd #{headphone.description}
   else 
     p Do you really want to delete this brand?
 
     form(method='POST' action='')
       div.form-group
-        input#brand-id.form-control(type='hidden', name='genre-id', required='true', value=brand.id)
+        input#brand-id.form-control(type='hidden', name='brandId', required='true', value=brand.id)
       button.btn.btn-primary(type='submit') Delete 
