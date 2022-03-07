@@ -1,9 +1,17 @@
+const crypto = require('crypto');
+const url = require('url');
 const async = require('async');
 const Brand = require('../models/brand');
 const Headphone = require('../models/headphone');
 const { body, validationResult } = require('express-validator');
 
 const brandController = (() => {
+	const verifyHash = (passwordHash) => {
+		const sha256 = crypto.createHash('sha256');
+		const hash = sha256.update(process.env['ADMIN_PASSWORD']).digest('base64');
+		return passwordHash === hash;
+	};
+
 	const brandList = (_req, res, next) => {
 		Brand.find()
 			.sort({ name: 1 })
@@ -82,29 +90,40 @@ const brandController = (() => {
 	];
 
 	const brandDeleteGet = (req, res, next) => {
-		async.parallel(
-			{
-				brand: (callback) => {
-					Brand.findById(req.params.id).exec(callback);
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			async.parallel(
+				{
+					brand: (callback) => {
+						Brand.findById(req.params.id).exec(callback);
+					},
+					brandHeadphones: (callback) => {
+						Headphone.find({ brand: req.params.id }).exec(callback);
+					},
 				},
-				brandHeadphones: (callback) => {
-					Headphone.find({ brand: req.params.id }).exec(callback);
+				(err, results) => {
+					if (err !== null) {
+						return next(err);
+					}
+					if (results.brand === null) {
+						res.redirect('/brands');
+					}
+					res.render('brandDelete', {
+						title: 'Delete Brand',
+						brand: results.brand,
+						brandHeadphones: results.brandHeadphones,
+					});
 				},
-			},
-			(err, results) => {
-				if (err !== null) {
-					return next(err);
-				}
-				if (results.brand === null) {
-					res.redirect('/brands');
-				}
-				res.render('brandDelete', {
-					title: 'Delete Brand',
-					brand: results.brand,
-					brandHeadphones: results.brandHeadphones,
-				});
-			},
-		);
+			);
+		}
 	};
 
 	const brandDeletePost = (req, res, next) => {
@@ -140,31 +159,42 @@ const brandController = (() => {
 	};
 
 	const brandUpdateGet = (req, res, next) => {
-		async.parallel(
-			{
-				brand: (callback) => {
-					Brand.findById(req.params.id).exec(callback);
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			async.parallel(
+				{
+					brand: (callback) => {
+						Brand.findById(req.params.id).exec(callback);
+					},
+					brandHeadphones: (callback) => {
+						Headphone.find({ brand: req.params.id }).exec(callback);
+					},
 				},
-				brandHeadphones: (callback) => {
-					Headphone.find({ brand: req.params.id }).exec(callback);
+				(err, results) => {
+					if (err !== null) {
+						return next(err);
+					}
+					if (results.brand === null) {
+						const err = new Error('Brand not found');
+						err.status = 404;
+						return next(err);
+					}
+					res.render('brandForm', {
+						title: 'Update Brand',
+						brand: results.brand,
+						brandHeadphones: results.brandHeadphones,
+					});
 				},
-			},
-			(err, results) => {
-				if (err !== null) {
-					return next(err);
-				}
-				if (results.brand === null) {
-					const err = new Error('Brand not found');
-					err.status = 404;
-					return next(err);
-				}
-				res.render('brandForm', {
-					title: 'Update Brand',
-					brand: results.brand,
-					brandHeadphones: results.brandHeadphones,
-				});
-			},
-		);
+			);
+		}
 	};
 
 	const brandUpdatePost = [

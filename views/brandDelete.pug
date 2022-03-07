@@ -6,12 +6,16 @@ block content
   if brandHeadphones.length
     p #[strong Delete the following headphones before attempting to delete this brand.]
 
-    div(style='margin-left:20px;margin-top:20px')
-      h4 Headphones 
-      dl 
-        each headphone in brandHeadphones
-          dt 
-            a(href=headphone.url) #{headphone.name}
+    ul.headphone-grid.detail-headphone-grid
+      each headphone in brandHeadphones
+        li
+          - const formatPrice = (price) => {
+            - return price.toFixed(2);
+          - };
+          a.headphone-detail-a(href=headphone.url)
+            img.headphone-image(src=headphone.image alt=headphone.name)
+            span #{headphone.name}
+            span.price-span $ #{formatPrice(headphone.price)}
   else 
     p Do you really want to delete this brand?
 

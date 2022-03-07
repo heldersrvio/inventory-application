@@ -7,9 +7,11 @@ const createError = require('http-errors');
 const path = require('path');
 const mongoose = require('mongoose');
 
+const indexRouter = require('./routes/index');
 const brandsRouter = require('./routes/brands');
 const categoriesRouter = require('./routes/categories');
 const headphonesRouter = require('./routes/headphones');
+const authenticationRouter = require('./routes/authentication');
 
 const app = express();
 
@@ -28,9 +30,11 @@ app.use(cookieParser());
 app.use(compression());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', indexRouter);
 app.use('/categories', categoriesRouter);
 app.use('/brands', brandsRouter);
 app.use('/headphones', headphonesRouter);
+app.use('/authentication', authenticationRouter);
 
 app.use((req, res, next) => {
 	next(createError(404));

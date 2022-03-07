@@ -1,0 +1,11 @@
+extends layout 
+
+block content 
+  span Enter the admin password 
+  form(method='POST' action=`/authentication?action=${action}`)
+    input(type='password' name='password' placeholder='Password')
+    button.btn.btn-primary(type='submit') Confirm
+  if errors
+   ul
+    for error in errors
+     li!= error.msg

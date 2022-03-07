@@ -2,6 +2,37 @@ doctype html
 html
   head
     title= title
+    link(rel='stylesheet', href='/stylesheets/reset.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    block content
+    header 
+      h1
+        a(href='/headphones') headphones 
+    main
+      nav 
+        div
+          h2 #[strong Headphones]
+          ul 
+            li
+              a(href='/headphones' class=) Show all 
+            li
+              a(href='/headphones/create') Add new 
+        hr
+        div
+          h2 #[strong Categories]
+          ul 
+            li
+              a(href='/categories') Show all 
+            li
+              a(href='/categories/create') Add new 
+        hr 
+        div
+          h2 #[strong Brands]
+          ul 
+            li
+              a(href='/brands') Show all 
+            li
+              a(href='/brands/create') Add new 
+        hr 
+      section.content
+        block content

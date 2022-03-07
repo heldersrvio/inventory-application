@@ -9,7 +9,7 @@ block content
       input#name.form-control(type='text' placeholder='Name of headphone' name='name' required='true' value=(undefined===headphone ? '' : headphone.name) )
     div.form-group
       label(for='description') Description:
-      textarea#description.form-control(type='textarea' placeholder='Description' name='description' required='true') #{undefined===headphone ? '' : headphone.description}
+      textarea#description.form-control(type='textarea' cols='30' rows='5' placeholder='Description' name='description' required='true') #{undefined===headphone ? '' : headphone.description}
     div.form-group
       label(for='category') Category:
       select#category.form-control(type='select' placeholder='Select category' name='category' required='true' )

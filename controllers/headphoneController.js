@@ -1,3 +1,5 @@
+const crypto = require('crypto');
+const url = require('url');
 const async = require('async');
 const Headphone = require('../models/headphone');
 const Category = require('../models/category');
@@ -5,6 +7,12 @@ const Brand = require('../models/brand');
 const { body, validationResult } = require('express-validator');
 
 const headphoneController = (() => {
+	const verifyHash = (passwordHash) => {
+		const sha256 = crypto.createHash('sha256');
+		const hash = sha256.update(process.env['ADMIN_PASSWORD']).digest('base64');
+		return passwordHash === hash;
+	};
+
 	const headphoneList = (_req, res, next) => {
 		Headphone.find()
 			.sort({ name: 1 })
@@ -141,18 +149,29 @@ const headphoneController = (() => {
 	];
 
 	const headphoneDeleteGet = (req, res, next) => {
-		Headphone.findById(req.params.id).exec((err, headphone) => {
-			if (err !== null) {
-				return next(err);
-			}
-			if (headphone === null) {
-				res.redirect('/headphones');
-			}
-			res.render('headphoneDelete', {
-				title: 'Delete Headphone',
-				headphone: headphone,
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			Headphone.findById(req.params.id).exec((err, headphone) => {
+				if (err !== null) {
+					return next(err);
+				}
+				if (headphone === null) {
+					res.redirect('/headphones');
+				}
+				res.render('headphoneDelete', {
+					title: 'Delete Headphone',
+					headphone: headphone,
+				});
 			});
-		});
+		}
 	};
 
 	const headphoneDeletePost = (req, res, next) => {
@@ -165,38 +184,49 @@ const headphoneController = (() => {
 	};
 
 	const headphoneUpdateGet = (req, res, next) => {
-		async.parallel(
-			{
-				headphone: (callback) => {
-					Headphone.findById(req.params.id)
-						.populate('brand')
-						.populate('category')
-						.exec(callback);
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			async.parallel(
+				{
+					headphone: (callback) => {
+						Headphone.findById(req.params.id)
+							.populate('brand')
+							.populate('category')
+							.exec(callback);
+					},
+					categories: (callback) => {
+						Category.find(callback);
+					},
+					brands: (callback) => {
+						Brand.find(callback);
+					},
 				},
-				categories: (callback) => {
-					Category.find(callback);
+				(err, results) => {
+					if (err !== null) {
+						return next(err);
+					}
+					if (results.headphone === null) {
+						const err = new Error('Headphone not found');
+						err.status = 404;
+						return next(err);
+					}
+					res.render('headphoneForm', {
+						title: 'Update Headphone',
+						categories: results.categories,
+						brands: results.brands,
+						headphone: results.headphone,
+					});
 				},
-				brands: (callback) => {
-					Brand.find(callback);
-				},
-			},
-			(err, results) => {
-				if (err !== null) {
-					return next(err);
-				}
-				if (results.headphone === null) {
-					const err = new Error('Headphone not found');
-					err.status = 404;
-					return next(err);
-				}
-				res.render('headphoneForm', {
-					title: 'Update Headphone',
-					categories: results.categories,
-					brands: results.brands,
-					headphone: results.headphone,
-				});
-			},
-		);
+			);
+		}
 	};
 
 	const headphoneUpdatePost = [

@@ -5,19 +5,20 @@ block content
   h1 Category: #{category.name}
 
   p #{category.description}
-
-  div(style='margin-left:20px;margin-top:20px')
-
-    h4 Headphones
-
-    dl
+  
+  if categoryHeadphones.length > 0
+    ul.headphone-grid.detail-headphone-grid
       each headphone in categoryHeadphones
-        dt
-          a(href=headphone.url) #{headphone.name}
-        dd #{headphone.description}
-
-      else
-        p This category has no headphones.
+        li
+          - const formatPrice = (price) => {
+            - return price.toFixed(2);
+          - };
+          a.headphone-detail-a(href=headphone.url)
+            img.headphone-image(src=headphone.image alt=headphone.name)
+            span #{headphone.name}
+            span.price-span $ #{formatPrice(headphone.price)}
+  else
+    span.no-headphones-span This category has no headphones.
   hr
   p 
     a(href=category.url+'/delete') Delete category

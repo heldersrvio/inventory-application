@@ -3,12 +3,17 @@ extends layout
 block content
   h1 #{headphone.name}
 
-  p #[strong Category:]
+  - const formatPrice = (price) => {
+    - return price.toFixed(2);
+  - };
+
+  img.headphone-detail-image(src=headphone.image alt=headphone.name)
+  p #[strong Category: ]
     a(href=headphone.category.url) #{headphone.category.name}
   p #[strong Description:] #{headphone.description}
-  p #[strong Brand:]
+  p #[strong Brand: ]
     a(href=headphone.brand.url) #{headphone.brand.name}
-  p #[strong Price:] #{headphone.price}
+  p #[strong Price:] $ #{formatPrice(headphone.price)}
   p #[strong Number in stock:] #{headphone.number_in_stock}
   if headphone.is_wireless === true
     p #[strong Wireless]

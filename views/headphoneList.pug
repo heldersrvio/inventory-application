@@ -1,13 +1,17 @@
 extends layout
 
 block content
-  h1= title
 
-  ul
+  ul.headphone-grid
     each headphone in headphoneList
       li
-        a(href=headphone.url) #{headphone.name}
-        |  (#{headphone.brand.name})
+        - const formatPrice = (price) => {
+          - return price.toFixed(2);
+        - };
+        a.headphone-detail-a(href=headphone.url)
+          img.headphone-image(src=headphone.image alt=headphone.name)
+          span #{headphone.name} (#{headphone.brand.name})
+          span.price-span $ #{formatPrice(headphone.price)}
 
     else
       li There are no headphones.

@@ -1,9 +1,17 @@
+const crypto = require('crypto');
+const url = require('url');
 const async = require('async');
 const Category = require('../models/category');
 const Headphone = require('../models/headphone');
 const { body, validationResult } = require('express-validator');
 
 const categoryController = (() => {
+	const verifyHash = (passwordHash) => {
+		const sha256 = crypto.createHash('sha256');
+		const hash = sha256.update(process.env['ADMIN_PASSWORD']).digest('base64');
+		return passwordHash === hash;
+	};
+
 	const categoryList = (_req, res, next) => {
 		Category.find()
 			.sort({ name: 1 })
@@ -88,29 +96,40 @@ const categoryController = (() => {
 	];
 
 	const categoryDeleteGet = (req, res, next) => {
-		async.parallel(
-			{
-				category: (callback) => {
-					Category.findById(req.params.id).exec(callback);
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			async.parallel(
+				{
+					category: (callback) => {
+						Category.findById(req.params.id).exec(callback);
+					},
+					categoryHeadphones: (callback) => {
+						Headphone.find({ category: req.params.id }).exec(callback);
+					},
 				},
-				categoryHeadphones: (callback) => {
-					Headphone.find({ category: req.params.id }).exec(callback);
+				(err, results) => {
+					if (err !== null) {
+						return next(err);
+					}
+					if (results.category === null) {
+						res.redirect('/categories');
+					}
+					res.render('categoryDelete', {
+						title: 'Delete Category',
+						category: results.category,
+						categoryHeadphones: results.categoryHeadphones,
+					});
 				},
-			},
-			(err, results) => {
-				if (err !== null) {
-					return next(err);
-				}
-				if (results.category === null) {
-					res.redirect('/categories');
-				}
-				res.render('categoryDelete', {
-					title: 'Delete Category',
-					category: results.category,
-					categoryHeadphones: results.categoryHeadphones,
-				});
-			},
-		);
+			);
+		}
 	};
 
 	const categoryDeletePost = (req, res, next) => {
@@ -146,31 +165,42 @@ const categoryController = (() => {
 	};
 
 	const categoryUpdateGet = (req, res, next) => {
-		async.parallel(
-			{
-				category: (callback) => {
-					Category.findById(req.params.id).exec(callback);
+		if (!verifyHash(req.cookies['Hash'])) {
+			res.redirect(
+				url.format({
+					pathname: '/authentication',
+					query: {
+						action: req.originalUrl,
+					},
+				}),
+			);
+		} else {
+			async.parallel(
+				{
+					category: (callback) => {
+						Category.findById(req.params.id).exec(callback);
+					},
+					categoryHeadphones: (callback) => {
+						Headphone.find({ category: req.params.id }).exec(callback);
+					},
 				},
-				categoryHeadphones: (callback) => {
-					Headphone.find({ category: req.params.id }).exec(callback);
+				(err, results) => {
+					if (err !== null) {
+						return next(err);
+					}
+					if (results.category === null) {
+						const err = new Error('Category not found');
+						err.status = 404;
+						return next(err);
+					}
+					res.render('categoryForm', {
+						title: 'Update Category',
+						category: results.category,
+						categoryHeadphones: results.categoryHeadphones,
+					});
 				},
-			},
-			(err, results) => {
-				if (err !== null) {
-					return next(err);
-				}
-				if (results.category === null) {
-					const err = new Error('Category not found');
-					err.status = 404;
-					return next(err);
-				}
-				res.render('categoryForm', {
-					title: 'Update Category',
-					category: results.category,
-					categoryHeadphones: results.categoryHeadphones,
-				});
-			},
-		);
+			);
+		}
 	};
 
 	const categoryUpdatePost = [
