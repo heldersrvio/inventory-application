@@ -1,9 +1,12 @@
 const crypto = require('crypto');
 const url = require('url');
 const async = require('async');
+const multer = require('multer');
 const Brand = require('../models/brand');
 const Headphone = require('../models/headphone');
 const { body, validationResult } = require('express-validator');
+
+const upload = multer({ dest: 'public/images/' });
 
 const brandController = (() => {
 	const verifyHash = (passwordHash) => {
@@ -59,10 +62,14 @@ const brandController = (() => {
 	};
 
 	const brandCreatePost = [
+		upload.single('logo_image'),
 		body('name', 'Brand name required.').trim().isLength({ min: 1 }).escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
 			const brand = new Brand({ name: req.body.name });
+			if (req.file !== null && req.file !== undefined) {
+				brand.logo_image = `/images/${req.file.filename}`;
+			}
 			if (!errors.isEmpty()) {
 				res.render('brandForm', {
 					title: 'Create Brand',
@@ -198,6 +205,7 @@ const brandController = (() => {
 	};
 
 	const brandUpdatePost = [
+		upload.single('logo_image'),
 		body('name', 'Brand name required.').trim().isLength({ min: 1 }).escape(),
 		(req, res, next) => {
 			const errors = validationResult(req);
@@ -209,6 +217,9 @@ const brandController = (() => {
 				});
 			} else {
 				const brand = new Brand({ name: req.body.name, _id: req.params.id });
+				if (req.file !== null && req.file !== undefined) {
+					brand.logo_image = `/images/${req.file.filename}`;
+				}
 				Brand.findByIdAndUpdate(
 					req.params.id,
 					brand,

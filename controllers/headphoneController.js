@@ -1,10 +1,13 @@
 const crypto = require('crypto');
 const url = require('url');
 const async = require('async');
+const multer = require('multer');
 const Headphone = require('../models/headphone');
 const Category = require('../models/category');
 const Brand = require('../models/brand');
 const { body, validationResult } = require('express-validator');
+
+const upload = multer({ dest: 'public/images/' });
 
 const headphoneController = (() => {
 	const verifyHash = (passwordHash) => {
@@ -74,6 +77,7 @@ const headphoneController = (() => {
 	};
 
 	const headphoneCreatePost = [
+		upload.single('image'),
 		(req, _res, next) => {
 			if (req.body.is_wireless === undefined) {
 				req.body.is_wireless = false;
@@ -114,6 +118,9 @@ const headphoneController = (() => {
 				is_wireless: req.body.is_wireless,
 				is_noise_canceling: req.body.is_noise_canceling,
 			});
+			if (req.file !== null && req.file !== undefined) {
+				headphone.image = `/images/${req.file.filename}`;
+			}
 			if (!errors.isEmpty()) {
 				async.parallel(
 					{
@@ -230,6 +237,7 @@ const headphoneController = (() => {
 	};
 
 	const headphoneUpdatePost = [
+		upload.single('image'),
 		(req, _res, next) => {
 			if (req.body.is_wireless === undefined) {
 				req.body.is_wireless = false;
@@ -271,6 +279,9 @@ const headphoneController = (() => {
 				is_noise_canceling: req.body.is_noise_canceling,
 				_id: req.params.id,
 			});
+			if (req.file !== null && req.file !== undefined) {
+				headphone.image = `/images/${req.file.filename}`;
+			}
 			if (!errors.isEmpty()) {
 				async.parallel(
 					{

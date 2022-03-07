@@ -3,10 +3,13 @@ extends layout
 block content
   h1 #{title}
 
-  form(method='POST' action='')
+  form(method='POST' action='' enctype='multipart/form-data')
     div.form-group
       label(for='name') Brand:
       input#name.form-control(type='text', name='name' value=(undefined===brand ? '' : brand.name))
+    div.form-group
+      label(for='logo-image') Logo image: 
+      input#logo-image.form-control(type='file' name='logo_image')
     button.btn.btn-primary(type='submit') Submit
 
   if errors
